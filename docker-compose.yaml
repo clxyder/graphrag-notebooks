@@ -1,0 +1,43 @@
+services:
+  neo4j:
+    image: neo4j:5.23.0-community-bullseye
+    ports:
+      - 7474:7474 # Mapping the Neo4j HTTP port
+      - 7687:7687 # Mapping the Neo4j Bolt port
+    volumes:
+      - neo4j_data:/data  # Using a named volume for data storage
+      - neo4j_plugins:/plugins
+    environment:
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+      - NEO4J_PLUGINS=["apoc"]
+
+  litellm:
+    image: ghcr.io/berriai/litellm:main-v1.44.4
+    volumes:
+      - ./litellm-config.yaml:/app/config.yaml
+    command: --port 4000 --config config.yaml
+    ports:
+      - 4000:4000 # Map the container port to the host, change the host port if necessary
+    env_file:
+      - .env # Load local .env file
+
+  redis:
+    image: redis:7.2.4-alpine3.19
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  # used for debugging purposes
+  # busybox:
+  #   image: busybox:1.36.1-glibc
+  #   command: sleep 10000000
+
+volumes:
+  redis_data:
+    driver: local
+  neo4j_data:
+    driver: local
+  neo4j_plugins:
+    driver: local

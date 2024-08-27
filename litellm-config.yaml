@@ -1,0 +1,24 @@
+# all params accepted by litellm.completion() - https://docs.litellm.ai/docs/completion/input
+model_list: 
+  - model_name: gpt-4o
+    litellm_params: 
+      model: gpt-4o
+  - model_name: gpt-4o-mini
+    litellm_params:
+      model: gpt-4o-mini
+  - model_name: gpt-3.5-turbo
+    litellm_params:
+      model: gpt-3.5-turbo
+  - model_name: text-embedding-ada-002
+    litellm_params:
+      model: text-embedding-ada-002
+  - model_name: text-embedding-3-small
+    litellm_params:
+      model: text-embedding-3-small
+
+litellm_settings:
+  # set_verbose: True
+  cache: True          # set cache responses to True, litellm defaults to using a redis cache
+  cache_params:        # set cache params for redis
+    type: redis
+    namespace: "litellm_caching"
